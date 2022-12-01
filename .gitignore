@@ -1,0 +1,7 @@
+/.idea
+/.composer
+/.docker
+/vendor
+/node_modules
+/.vscode
+.bash_history
