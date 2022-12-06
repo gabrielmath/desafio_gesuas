@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . "./../../../Core/Eloquent/connect.php";
+require __DIR__ . "./../connect.php";
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Schema\Blueprint;
