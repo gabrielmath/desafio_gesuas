@@ -1,1 +1,113 @@
-<?= $v->layout("_theme") ?>
+<?php
+$this->layout("_master");
+/**
+ * @var \Source\Support\Models\User $user
+ */
+?>
+
+<div class="container">
+  <div class="row">
+    <div class=" col-12 d-flex justify-content-between">
+      <h4>Listagem de usuários</h4>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newUser">
+        Novo Usuário
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-sm-4">
+      <div class="form-group mt-3 mb-2">
+        <input type="text" id="inputSearch" placeholder="Buscar NIS..." class="form-control" />
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="table-responsive">
+        <table id="userList" class="table table-dark table-striped-columns">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nome</th>
+              <th>NIS</th>
+            </tr>
+          </thead>
+          <tbody>
+          <?php foreach ($users as $user):?>
+            <tr>
+              <td><?= $user->id ?></td>
+              <td><?= $user->name ?></td>
+              <td><?= $user->document ?></td>
+            </tr>
+          <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+      <h5 id="notFound" class="text-center text-danger d-none">Cidadão não encontrado!</h5>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="newUser" tabindex="-1" aria-labelledby="newUserLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="/store" method="post">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="newUserLabel">Novo Cidadão</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="form-group">
+            <input name="name" type="text" class="form-control" required>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          <button type="submit" class="btn btn-success">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<?php $this->start('js'); ?>
+  <script type="application/javascript">
+    function userFilter(e) {
+      e.preventDefault();
+      var searchInput, filter, userTable, row, documentColumn, i, txtValue, notFound, totalHidden = 0;
+      searchInput = document.getElementById("inputSearch");
+      filter = searchInput.value;
+      userTable = document.getElementById("userList");
+      row = userTable.getElementsByTagName("tr");
+      notFound = document.getElementById('notFound');
+
+      for (i = 0; i < row.length; i++) {
+        documentColumn = row[i].getElementsByTagName("td")[2];
+        if (documentColumn) {
+          txtValue = documentColumn.textContent || documentColumn.innerText;
+          if (txtValue.indexOf(filter) > -1) {
+            row[i].style.display = "";
+            notFound.classList.add('d-none');
+
+            if(totalHidden > 0) {
+              totalHidden--;
+            }
+          } else {
+            totalHidden++;
+            row[i].style.display = "none";
+
+            if(totalHidden === (row.length - 1)){
+              notFound.classList.remove('d-none');
+            }
+          }
+        }
+      }
+    }
+
+    var inputSearch = document.getElementById('inputSearch');
+    inputSearch.addEventListener('keyup', userFilter);
+  </script>
+<?php $this->end(); ?>
