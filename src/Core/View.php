@@ -4,7 +4,7 @@ namespace Source\Core;
 
 use League\Plates\Engine;
 
-class View
+class View implements ViewInterface
 {
     private Engine $engine;
 
@@ -42,7 +42,7 @@ class View
     /**
      * @return Engine
      */
-    public function engine(): Engine
+    public function extendTemplate(): Engine
     {
         return $this->engine;
     }
